@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function App() {
   const [name, setName] = useState("");
@@ -9,56 +8,56 @@ function App() {
 
   const [students, setStudents] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
-  useEffect(() =>{
-    const savedStudents =
-    JSON.parse(
-      localStorage.getItem("student")
-    ) || [];
-    setStudents(savedStudents);
-  } , []) ;
-  const handleSubmit =() => {
-    if(
-      name ==="" ||
-      email === " " ||
-      department ==="" ||
-      age === ""
 
-    ){ <div className=""></div>
-      alert("please fill all fields");
-      return;
-    }
-    const student ={
-      name,
-      email ,
-      department ,
-      age ,
-    };
-  }
+  // Load data from localStorage
+  useEffect(() => {
+    const savedStudents =
+      JSON.parse(localStorage.getItem("student")) || [];
+    setStudents(savedStudents);
+  }, []);
 
   const handleSubmit = () => {
-    const student = { name, email, department, age };
+    if (
+      name === "" ||
+      email === "" ||
+      department === "" ||
+      age === ""
+    ) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    const student = {
+      name,
+      email,
+      department,
+      age,
+    };
 
     if (editIndex !== null) {
+      // Update existing student
       const updatedStudents = [...students];
       updatedStudents[editIndex] = student;
+
       setStudents(updatedStudents);
       localStorage.setItem(
-        "student" ,
+        "student",
         JSON.stringify(updatedStudents)
-      ) ;
+      );
+
       setEditIndex(null);
     } else {
-      const updatedStudents = [
-        ... student ,
-        student
-      ];
+      // Add new student
+      const updatedStudents = [...students, student];
+
       setStudents(updatedStudents);
-      localStorage.setItem(... "Student"
+      localStorage.setItem(
+        "student",
+        JSON.stringify(updatedStudents)
       );
     }
-      setStudents([...students, student]);
-    }
 
+    // Clear form
     setName("");
     setEmail("");
     setDepartment("");
@@ -76,42 +75,36 @@ function App() {
   };
 
   const handleDelete = (index) => {
-    const updatedStudents = students.filter((_, i) => i !== index);
-    setStudents(updatedStudents); 
+    const updatedStudents = students.filter(
+      (_, i) => i !== index
+    );
+
+    setStudents(updatedStudents);
+
     localStorage.setItem(
       "student",
-      JSON.strigifu(updatedStudents)
-    )
+      JSON.stringify(updatedStudents)
+    );
   };
+
   const inputStyle = {
+    width: "100%",
+    padding: "10px",
+    marginBottom: "15px",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+    boxSizing: "border-box",
+  };
 
-  width: "100%",
-
-  padding: "10px",
-
-  marginBottom: "15px",
-
-  borderRadius: "5px",
-
-  border: "1px solid #ccc",
-
-  boxSizing: "border-box"
-
-};
-const buttonStyle = {
-
-  width: "100%",
-
-  padding: "12px",
-
-  border: "none",
-
-  borderRadius: "5px",
-
-  cursor: "pointer"
-
-};
-
+  const buttonStyle = {
+    width: "100%",
+    padding: "12px",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    backgroundColor: "#007bff",
+    color: "#fff",
+  };
 
   return (
     <div
@@ -160,7 +153,9 @@ const buttonStyle = {
       />
 
       <button onClick={handleSubmit} style={buttonStyle}>
-        {editIndex !== null ? "Update Student" : "Add Student"}
+        {editIndex !== null
+          ? "Update Student"
+          : "Add Student"}
       </button>
 
       <h2>Student List</h2>
@@ -185,28 +180,40 @@ const buttonStyle = {
         </thead>
 
         <tbody>
-          {students.map((student, index) => (
-            <tr key={index}>
-              <td>{student.name}</td>
-              <td>{student.email}</td>
-              <td>{student.department}</td>
-              <td>{student.age}</td>
-              <td>
-                <button onClick={() => handleEdit(index)}>
-                  Edit
-                </button>
+          {students.length > 0 ? (
+            students.map((student, index) => (
+              <tr key={index}>
+                <td>{student.name}</td>
+                <td>{student.email}</td>
+                <td>{student.department}</td>
+                <td>{student.age}</td>
+                <td>
+                  <button
+                    onClick={() => handleEdit(index)}
+                  >
+                    Edit
+                  </button>
 
-                <button
-                  onClick={() => handleDelete(index)}
-                  style={{ marginLeft: "10px" }}
-                >
-                  Delete
-                </button>
+                  <button
+                    onClick={() => handleDelete(index)}
+                    style={{ marginLeft: "10px" }}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5" style={{ textAlign: "center" }}>
+                No students found
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>
   );
 }
+
+export default App;
