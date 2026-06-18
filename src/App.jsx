@@ -9,6 +9,31 @@ function App() {
 
   const [students, setStudents] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
+  useEffect(() =>{
+    const savedStudents =
+    JSON.parse(
+      localStorage.getItem("student")
+    ) || [];
+    setStudents(savedStudents);
+  } , []) ;
+  const handleSubmit =() => {
+    if(
+      name ==="" ||
+      email === " " ||
+      department ==="" ||
+      age === ""
+
+    ){
+      alert("please fill all fields");
+      return;
+    }
+    const student ={
+      name,
+      email ,
+      department ,
+      age ,
+    };
+  }
 
   const handleSubmit = () => {
     const student = { name, email, department, age };
@@ -17,8 +42,20 @@ function App() {
       const updatedStudents = [...students];
       updatedStudents[editIndex] = student;
       setStudents(updatedStudents);
+      localStorage.setItem(
+        "student" ,
+        JSON.stringify(updatedStudents)
+      ) ;
       setEditIndex(null);
     } else {
+      const updatedStudents = [
+        ... student ,
+        student
+      ];
+      setStudents(updatedStudents);
+      localStorage.setItem(... "Student"
+      );
+    }
       setStudents([...students, student]);
     }
 
@@ -40,8 +77,40 @@ function App() {
 
   const handleDelete = (index) => {
     const updatedStudents = students.filter((_, i) => i !== index);
-    setStudents(updatedStudents);
+    setStudents(updatedStudents); 
+    localStorage.setItem(
+      "student",
+      JSON.strigifu(updatedStudents)
+    )
   };
+  const inputStyle = {
+
+  width: "100%",
+
+  padding: "10px",
+
+  marginBottom: "15px",
+
+  borderRadius: "5px",
+
+  border: "1px solid #ccc",
+
+  boxSizing: "border-box"
+
+};
+const buttonStyle = {
+
+  width: "100%",
+
+  padding: "12px",
+
+  border: "none",
+
+  borderRadius: "5px",
+
+  cursor: "pointer"
+
+};
 
 
   return (
