@@ -23,7 +23,7 @@ function App() {
       department ==="" ||
       age === ""
 
-    ){
+    ){ <div className=""></div>
       alert("please fill all fields");
       return;
     }
